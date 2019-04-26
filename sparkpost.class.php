@@ -135,7 +135,19 @@ class SparkPost
 
     static function get_setting($setting)
     {
+        //TODO This used to use get_options, determine if this switch is necessary with get_settings
+        $switched = false;
+         if ( bp_get_root_blog_id() !== get_current_blog_id() ) {
+            switch_to_blog( bp_get_root_blog_id() );
+            $switched = true;
+        }
+
         $settings = self::get_settings();
+
+        if ( $switched ) {
+            restore_current_blog();
+        }
+
         return $settings[$setting];
     }
 
