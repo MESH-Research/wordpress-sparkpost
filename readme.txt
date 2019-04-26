@@ -2,8 +2,8 @@
 Contributors: sparkpost, rajuru
 Tags: sparkpost, smtp, wp_mail, mail, email
 Requires at least: 4.3
-Tested up to: 4.6.1
-Stable tag: 2.5.0
+Tested up to: 4.9.5
+Stable tag: 3.2.0
 License: GPLv2 or later
 
 Send all your email from WordPress through SparkPost, the most advanced email delivery service.
@@ -11,7 +11,12 @@ Send all your email from WordPress through SparkPost, the most advanced email de
 == Description ==
 The [SparkPost](https://www.sparkpost.com/) email delivery service offers best in class deliverability to ensure your mail hits the inbox, live analytics to review, track and optimize your email activities, as well as highest performance when you need it most: always.
 
-When the SparkPost plugin is enabled, all outgoing email from your WordPress installation is sent through your SparkPost service.  From within [the SparkPost UI](https://app.sparkpost.com/), you can then watch your campaigns unfold live by tracking your engagement metrics, learn what your audience responds to and even integrate more deeply with your app using the SparkPost API.
+When the SparkPost plugin is enabled, all outgoing email from your WordPress installation is sent through your SparkPost service.  From within [the SparkPost UI](https://app.sparkpost.com/) or [SparkPost EU UI](https://app.eu.sparkpost.com/), you can then watch your campaigns unfold live by tracking your engagement metrics, learn what your audience responds to and even integrate more deeply with your app using the SparkPost API.
+
+**Requirements**
+- PHP 5.4 or later
+- WordPress 4.3 or later
+
 
 == Installation ==
 
@@ -36,7 +41,7 @@ Upon successful activation, **SparkPost** will appear on the _Settings_ menu in 
 == Frequently Asked Questions ==
 
 = What do I need to start using this plugin? =
-You'll need to create an account on SparkPost.com and then generate an API Key with *Send via SMTP* and *Transmission Read/Write* permissions. Creating an account is completely free. Visit [SparkPost](https://app.sparkpost.com/sign-up) to signup.
+You'll need to create an account on SparkPost.com and then generate an API Key with *Send via SMTP* and *Transmission Read/Write* permissions. Creating an account is completely free. Visit [SparkPost](https://app.sparkpost.com/join) to signup (https://app.eu.sparkpost.com/ for EU).
 
 = How do I create an API key? =
 Follow [this tutorial](https://support.sparkpost.com/customer/portal/articles/1933377) for creating an API key. **Remember:** your API key must have *Send via SMTP* and *Transmission Read/Write* permissions to be usable by this plugin.
@@ -46,10 +51,47 @@ Visit plugin's [official issue tracker](https://github.com/SparkPost/wordpress-s
 
 
 == Changelog ==
+= 3.2.0 =
+- Add support for EU hostnames ([141](https://github.com/SparkPost/wordpress-sparkpost/pull/141))
+
+= 3.1.1 =
+- Avoid db checking if email logging is not enabled
+
+= 3.1.0 =
+- Improved UI
+- (Optional) Email logging support for better debugging
+- Template validation with mailer
+- Allow string attachment ([133](https://github.com/SparkPost/wordpress-sparkpost/pull/133))
+- Tested up to Wordpress v4.9.4
+
+= 3.0.1 =
+- Fix error with older php version ([#113](https://github.com/SparkPost/wordpress-sparkpost/issues/113))
+
+= 3.0.0 =
+- Support attachments in template ([#97](https://github.com/SparkPost/wordpress-sparkpost/issues/97)). Add `Templates: Read/Write` permission to API Key for this to work!
+- Tested in WordPress v4.7.3
+- Fix sending email with sandbox ([#109](https://github.com/SparkPost/wordpress-sparkpost/issues/109))
+
+= 2.6.4 =
+- Fix the issue to use template hook when not set in settings ([#95](https://github.com/SparkPost/wordpress-sparkpost/issues/95))
+- Clarify attachment can't be sent with template and include workaround example ([#96](https://github.com/SparkPost/wordpress-sparkpost/issues/96))
+- Include attachment in test email
+
+= 2.6.3 =
+- Add plugin name to XMailer (for SMTP)
+- Tested in WordPress v4.7.2
+
+= 2.6.2 =
+- Tested in WordPress v4.7.1
+
+= 2.6.0 =
+- Handle multiple recipients correctly
+- Fix getting started link
+- Send assoc array to `wpsp_smtp_msys_api` filter
 
 = 2.5.0 =
-- Add support for [Transactional email](https://github.com/SparkPost/wordpress-sparkpost/blob/master/docs/transactional.md).
-- Add support for [hooks](https://github.com/SparkPost/wordpress-sparkpost/blob/master/docs/hooks.md).
+- Add support for [Transactional email](https://github.com/SparkPost/wordpress-sparkpost/blob/master/docs/transactional.md)
+- Add support for [hooks](https://github.com/SparkPost/wordpress-sparkpost/blob/master/docs/hooks.md)
 
 = 2.4.1 =
 - Fix Reply-To header issue with WordPress 4.6
@@ -108,4 +150,4 @@ Visit plugin's [official issue tracker](https://github.com/SparkPost/wordpress-s
 
 == Upgrade Notice ==
 
-This is initial version.
+From WordPress plugins list, click `update now`.
