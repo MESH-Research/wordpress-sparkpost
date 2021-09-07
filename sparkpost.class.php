@@ -125,7 +125,7 @@ class SparkPost
             $switched = true;
         }
 
-        $options = array_merge(self::$options_default, get_option('sp_settings', array()));
+        $options = array_merge(self::$settings_default, get_option('sp_settings', array()));
 
         if ( $switched ) {
             restore_current_blog();
