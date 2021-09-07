@@ -178,11 +178,13 @@ class SparkPostHTTPMailer extends \PHPMailer
             $body['content']['attachments'] = $attachments;
         }
 
-        if (isset($body['content']['from']['email']) && SparkPost::is_sandbox($body['content']['from']['email'])) {
-            $body['options']['sandbox'] = true;
+        // bp-reply-by-email sets a custom reply-to header which results in a 422 error from sparkpost:
+        // "Error while validating header reply-to: 'Reply-To' header must be specified in content.reply_to"
+        // Moving the header to content.reply_to avoids the error & makes sparkpost send the message.
+        if ( isset( $body['content']['headers']->{'reply-to'} ) ) {
+            $body['content']['reply_to'] = $body['content']['headers']->{'reply-to'};
+            unset( $body['content']['headers']->{'reply-to'} );
         }
-
-        $body = apply_filters('wpsp_request_body', $body);
 
         return $body;
     }
@@ -222,13 +224,14 @@ class SparkPostHTTPMailer extends \PHPMailer
 
     protected function read_attachment($data)
     {
-        // If the provided String is a File Path, load the File Contents. If not, assume the String is the contents
+	// If the provided String is a File Path, load the File Contents. If not, assume the String is the contents
         // This allows PHPMailer's addStringAttachment() method to work thereby avoiding the need to store a file on the server before attaching it
-        if ( is_file( $data ) ) {
-            return file_get_contents($data);
+        if ( is_file( $path ) ) {
+
+            return file_get_contents($path);
         }
         else {
-            return $data;
+            return $path;
         }
     }
 

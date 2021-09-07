@@ -118,19 +118,20 @@ class SparkPost
 
     static function get_settings($apply_filter = true)
     {
-        $settings = array_merge(
-            self::$settings_default,
-            get_option('sp_settings', array()),
-            get_option('sp_settings_basic', array()),
-            get_option('sp_settings_overrides', array())
-        );
+        $switched = false;
 
-        if ($apply_filter) {
-            return apply_filters('wpsp_get_settings', $settings);
-        } else {
-            return $settings;
+        if ( bp_get_root_blog_id() !== get_current_blog_id() ) {
+            switch_to_blog( bp_get_root_blog_id() );
+            $switched = true;
         }
 
+        $options = array_merge(self::$options_default, get_option('sp_settings', array()));
+
+        if ( $switched ) {
+            restore_current_blog();
+        }
+
+        return $options;
     }
 
     static function get_setting($setting)
