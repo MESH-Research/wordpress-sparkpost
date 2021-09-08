@@ -5,10 +5,11 @@ namespace WPSparkPost;
 // Otherwise, this could be an illicit direct request.
 if (!defined('ABSPATH')) exit();
 
-require_once ABSPATH . WPINC . '/class-phpmailer.php';
+require_once ABSPATH . WPINC . '/PHPMailer/PHPMailer.php';
+require_once ABSPATH . WPINC . '/PHPMailer/Exception.php';
 require_once WPSP_PLUGIN_DIR . '/templates.class.php';
 
-class SparkPostHTTPMailer extends \PHPMailer
+class SparkPostHTTPMailer extends \PHPMailer\PHPMailer\PHPMailer
 {
     public $endpoint;
     public $wp_mail_args;
@@ -66,9 +67,9 @@ class SparkPostHTTPMailer extends \PHPMailer
         if (is_bool($result)) { // it means, response been already processed by the hooked filter. so just return the value.
             $this->debug('Skipping response processing');
             return $result;
-        } else {
-            return $this->handle_response($result);
         }
+
+        return $this->handle_response($result);
     }
 
     /**
@@ -117,20 +118,25 @@ class SparkPostHTTPMailer extends \PHPMailer
 
         $attachments = $this->get_attachments();
 
+        $content_headers = $this->get_headers();
+
         // pass through either stored template or inline content
         if (!empty($template_id)) {
             // stored template
             $substitution_data = $this->get_template_substitutes($sender, $replyTo);
-            if (sizeof($attachments) > 0) { //get template preview data and then send it as inline
+            if (sizeof($attachments) > 0) { // get template preview data and then send it as inline
                 $preview_contents = $this->template->preview($template_id, $substitution_data);
                 if ($preview_contents === false) {
                     return false;
                 }
                 $body['content'] = array(
                     'from' => (array)$preview_contents->from,
-                    'subject' => (string)$preview_contents->subject,
-                    'headers' => (array)$this->get_headers()
+                    'subject' => (string)$preview_contents->subject
                 );
+
+                if(!empty($content_headers)) {
+                    $body['content']['headers'] = $content_headers;
+                }
 
                 if (property_exists($preview_contents, 'text')) {
                     $body['content']['text'] = $preview_contents->text;
@@ -144,7 +150,7 @@ class SparkPostHTTPMailer extends \PHPMailer
                     $body['content']['reply_to'] = $preview_contents->reply_to;
                 }
 
-            } else { // simply subsititute template tags
+            } else { // simply substitute template tags
                 $body['content']['template_id'] = $template_id;
                 $body['substitution_data'] = $substitution_data;
             }
@@ -152,9 +158,12 @@ class SparkPostHTTPMailer extends \PHPMailer
             // inline content
             $body['content'] = array(
                 'from' => $sender,
-                'subject' => $this->Subject,
-                'headers' => $this->get_headers()
+                'subject' => $this->Subject
             );
+
+            if(!empty($content_headers)) {
+                $body['content']['headers'] = $content_headers;
+            }
 
             if ($replyTo) {
                 $body['content']['reply_to'] = $replyTo;
@@ -433,7 +442,7 @@ class SparkPostHTTPMailer extends \PHPMailer
             } else {
                 $recipients_list[] = $recipient['address']['email'];
             }
-        };
+        }
 
         return implode(',', $recipients_list);
     }
@@ -453,7 +462,7 @@ class SparkPostHTTPMailer extends \PHPMailer
 
         $formatted_headers = array();
         // split by line separator
-        foreach (explode($this->LE, $headers) as $line) {
+        foreach (explode($this::$LE, $headers) as $line) {
 
             $splitted_line = explode(': ', $line);
             $key = trim($splitted_line[0]);
