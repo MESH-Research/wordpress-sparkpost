@@ -298,6 +298,10 @@ class SparkPostHTTPMailer extends PHPMailer
             }
         }
 
+        foreach ( $this->ReplyTo as [ $address, $name ] ) {
+            $replyTos[] = trim( $address );
+        }
+
         return implode(',', $replyTos);
     }
 
