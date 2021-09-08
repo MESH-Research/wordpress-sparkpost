@@ -40,12 +40,13 @@ class SparkPostHTTPMailer extends PHPMailer
 	 *
 	 * @return bool Whether the email address is valid.
 	 */
+    /*
 	public static function validateAddress( $address, $patternselect = null ) {
 		if ( is_null( $patternselect ) ) {
 			return parent::validateAddress( $address, 'html5' );
 		}
 		return parent::validateAddress( $address, $patternselect );
-	}
+	}*/
 
     /**
      * Send mail using SparkPost
