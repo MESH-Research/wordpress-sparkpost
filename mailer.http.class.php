@@ -310,6 +310,10 @@ class SparkPostHTTPMailer extends PHPMailer
         );
         $headers = $this->createHeader();
 
+        if ( ! $this->LE ) {
+            $this->LE = "\n";
+        }
+
         $formatted_headers = new StdClass();
         // split by line separator
         foreach (explode($this->LE, $headers) as $line) {
